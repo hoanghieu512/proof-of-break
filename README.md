@@ -51,6 +51,16 @@ Planned for final submission (9 Aug):
 
 This is a proof that the mechanism works end to end — not a platform. It covers the class of bugs expressible as on-chain invariants; economic and multi-transaction logic flaws are out of scope for this build.
 
+### Known limitations, stated rather than discovered
+
+**A bounty can be griefed into permanent limbo.** The registry only consults the checker when a bounty is opened and when someone makes an attempt. The target is an ordinary public contract, so anyone can call it directly without going through the registry. If a griefer breaks the invariant that way, no later attempt can ever produce the intact→broken transition a payout requires, and because there is no withdrawal function the escrowed USDC is stuck forever. This is cheap to do and nothing prevents it.
+
+It is a deliberate trade. Adding a refund path would mean adding a way to take money out of the registry, and "nobody can withdraw, including the author" is the property the whole transparency argument rests on. v1 keeps the stronger property and accepts the griefing risk.
+
+**Invariants must be checkable within one block's gas.** The checker recomputes the vault's total from every holder rather than trusting the target's own summary, so the cost grows with the number of holders and the registry pays it twice per attempt. Measured at 8,029 gas per holder, a claim stops fitting in an Arc block at roughly 3,700 holders — at which point a real, discovered bug becomes unclaimable. Properties requiring an unbounded scan of participants do not fit this mechanism. Numbers in [docs/measurements/task2-checker-gas.md](docs/measurements/task2-checker-gas.md).
+
+**A sponsor can write a checker that never reports a break.** Checker source is public and verifiable on Arcscan, and an agent can read it before spending gas, but nothing in v1 forces a checker to be honest.
+
 ## Author
 
 Senior test engineer (8+ yrs QA). The interesting problem here isn't the Solidity — it's defining invariants worth testing and designing verification that a machine can trust. That's the part I know.

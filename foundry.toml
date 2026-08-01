@@ -13,6 +13,14 @@ optimizer = true
 optimizer_runs = 200
 bytecode_hash = "none"
 
+[invariant]
+runs = 128
+depth = 100
+# Attempts revert constantly by design — a bounty already paid, a target that
+# refuses the input, an invariant already broken. Those are outcomes to explore,
+# not failures, so a revert must not end the run.
+fail_on_revert = false
+
 [rpc_endpoints]
 arc_testnet = "${ARC_RPC_URL}"
 

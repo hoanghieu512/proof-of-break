@@ -1,5 +1,51 @@
 # Changelog
 
+## v0.4.0 — 2026-08-01
+
+The mechanism. Try, judge and pay, atomically.
+
+### Added
+- `BountyRegistry.attempt(bountyId, callData)` — asks the checker, performs the
+  agent's action on the target, asks again, and pays the caller on an
+  intact→broken transition inside the one transaction. No gap between the break
+  and the payout means nothing to front-run.
+- `test/BountyRegistryAttempt.t.sol` — 20 tests, most of them attacks.
+- `test/mocks/HostileMocks.sol` — reentrant targets, a checker that sabotages
+  itself mid-attempt, a return-data bomb, a claimant that refuses payment.
+- `test/BountyRegistryInvariant.t.sol` — 12,800 random calls per invariant
+  across multiple bounties, actors and griefers.
+
+### Defences
+- **Contract-wide reentrancy lock**, not per-function. A hostile target must be
+  unable to re-enter `openBounty` as well as `attempt`.
+- **A checker that cannot answer reverts the attempt.** Never read as "broken".
+  Treating silence as proof would let a hostile target mint a payout by simply
+  making its own checker fail.
+- **Return data is discarded at the EVM level.** The target call is written in
+  assembly with a zero-length output area, so a target cannot inflate the cost
+  of every attempt by returning megabytes.
+- **Only the declared selector may be fired**, checked before the target is
+  touched. Effects before interactions; the payout is bounded by the bounty's
+  own reward; a bounty pays at most once.
+- The registry refuses to be named as its own target or checker.
+
+### Changed
+- `scripts/verify-no-withdrawal.sh` → `scripts/verify-escrow.sh`. The old script
+  asserted the runtime bytecode contained no `CALL`, which was true until this
+  release and is now false by necessity: `attempt` must call the target and must
+  pay the winner. Rather than leave a stale claim standing, the script now
+  checks the refined proposition — value enters only via `openBounty` and leaves
+  only via the payout — and is explicit that the second half is behavioural and
+  therefore verified by test rather than by disassembly. There are exactly 2
+  `CALL` sites and 3 `STATICCALL` sites.
+
+### Known limitation, accepted
+- Anyone can break a target directly without going through the registry. No
+  later attempt can then produce the required transition, and with no
+  withdrawal function the bounty is stuck permanently. Cheap to do, nothing
+  prevents it. Kept in preference to adding any withdrawal path. Recorded in
+  the README.
+
 ## v0.3.0 — 2026-08-01
 
 The escrow. Opening and holding only — attack and payout are Task 4.
