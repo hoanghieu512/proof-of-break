@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.2.0 — 2026-08-01
+
+The arbiter.
+
+### Added
+- `src/IChecker.sol` — the interface every checker must satisfy. `checkInvariant()`
+  takes no arguments and is `view`: the target is bound at deployment so no
+  caller can redirect it, and `view` compiles to STATICCALL so the EVM itself
+  forbids any state write during a check.
+- `src/VaultChecker.sol` — checks that the sum of every holder's balance equals
+  `totalIssued`. Recomputes the total by walking `holderAt`/`balanceOf` rather
+  than calling `DemoVault.sumOfBalances()`, because the target is the party
+  under suspicion.
+- `test/VaultChecker.t.sol` — 12 tests, including a `LyingVault` whose summary
+  function always reports a balanced ledger; the checker is not fooled.
+- `docs/measurements/task2-checker-gas.md` — gas by holder count and the
+  resulting ceiling.
+
+### Known limitation
+- Checking is O(holders) and the Registry pays it twice per claim. Measured at
+  8,029 gas per holder for the pair, a claim stops fitting in an Arc block at
+  roughly 3,700 holders. Past that a real, found bug becomes unclaimable and —
+  since v1 has no withdrawal — the bounty is stuck permanently. Not solved in
+  v1; documented instead.
+
 ## v0.1.0 — 2026-08-01
 
 First contract of the project.
