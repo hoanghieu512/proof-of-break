@@ -1,5 +1,36 @@
 # Changelog
 
+## v0.3.0 — 2026-08-01
+
+The escrow. Opening and holding only — attack and payout are Task 4.
+
+### Added
+- `src/BountyRegistry.sol` — anyone can open a bounty by declaring a target, a
+  checker, and the single function signature agents may fire, funding it with
+  native USDC in the same call. Open bounties are enumerable by anyone.
+- `test/BountyRegistry.t.sol` — 22 tests.
+- `scripts/verify-no-withdrawal.sh` — proves the no-withdrawal claim against the
+  compiled artefact: one state-changing function, one payable function, no
+  receive/fallback, and no SELFDESTRUCT, DELEGATECALL, CALLCODE or CALL in the
+  runtime bytecode. Only 2 STATICCALLs, both to the checker.
+- `scripts/read-bounties-locally.sh` — reads the board over JSON-RPC from a
+  local anvil node, as an agent would.
+
+### Closed
+- **Checker/target mismatch.** A sponsor could declare target A while supplying
+  a checker welded to target B, leaving a funded bounty that could never be
+  claimed. `openBounty` now asks the checker which contract it watches and
+  refuses any mismatch. `IChecker.target()` already existed for this.
+- **Bounties that are dead on arrival.** Opening over an already-broken
+  invariant, a target with no code, or a malformed signature is refused. With
+  no withdrawal function, an unclaimable bounty is destroyed money, not an
+  inconvenience.
+
+### Notes
+- `ONE_USDC = 1e18`. Arc's native USDC has 18 decimals, not the 6 of its ERC-20
+  form. Funding with `1e6` would escrow a trillionth of a dollar and no test
+  would fail, so the unit is asserted explicitly.
+
 ## v0.2.0 — 2026-08-01
 
 The arbiter.
