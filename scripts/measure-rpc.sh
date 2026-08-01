@@ -123,20 +123,39 @@ measure_writes() {
   elapsed=$(python3 -c "print(f'{$end_all-$start_all:.2f}')")
   echo "submitted ${#hashes[@]}/$count in ${elapsed}s -> $(python3 -c "print(f'{${#hashes[@]}/($end_all-$start_all):.1f}')") tx/s submission rate"
 
-  echo "waiting for receipts..."
-  local mined=0 total_gas=0 h
+  # Receipts do not exist the instant a tx is accepted into the mempool, so
+  # poll with a deadline instead of asking once and calling an unmined tx lost.
+  echo "waiting for receipts (up to 120s)..."
+  local mined=0 total_gas=0 first_block=0 last_block=0 h
   for h in "${hashes[@]}"; do
-    local rcpt
-    rcpt=$(cast receipt "$h" --rpc-url "$RPC" --json 2>/dev/null)
-    if [[ -n "$rcpt" ]] && printf '%s' "$rcpt" | jq -e '.status' >/dev/null 2>&1; then
-      local st gu
+    local rcpt="" deadline=$(( SECONDS + 120 ))
+    while (( SECONDS < deadline )); do
+      rcpt=$(cast receipt "$h" --rpc-url "$RPC" --json 2>/dev/null)
+      if [[ -n "$rcpt" ]] && printf '%s' "$rcpt" | jq -e '.blockNumber != null' >/dev/null 2>&1; then
+        break
+      fi
+      rcpt=""
+      sleep 2
+    done
+    if [[ -n "$rcpt" ]]; then
+      local st gu bn
       st=$(printf '%s' "$rcpt" | jq -r '.status')
-      gu=$(printf '%s' "$rcpt" | jq -r '.gasUsed')
-      [[ "$st" == "0x1" ]] && mined=$(( mined + 1 )) && total_gas=$(( total_gas + $(cast to-dec "$gu") ))
+      gu=$(cast to-dec "$(printf '%s' "$rcpt" | jq -r '.gasUsed')")
+      bn=$(cast to-dec "$(printf '%s' "$rcpt" | jq -r '.blockNumber')")
+      (( first_block == 0 || bn < first_block )) && first_block=$bn
+      (( bn > last_block )) && last_block=$bn
+      if [[ "$st" == "0x1" ]]; then
+        mined=$(( mined + 1 ))
+        total_gas=$(( total_gas + gu ))
+      fi
     fi
   done
   echo "mined OK: $mined/${#hashes[@]}"
-  [[ $mined -gt 0 ]] && echo "avg gasUsed per bump(): $(( total_gas / mined ))"
+  if (( mined > 0 )); then
+    echo "avg gasUsed per bump(): $(( total_gas / mined ))"
+    echo "spread across blocks : $first_block .. $last_block ($(( last_block - first_block + 1 )) blocks)"
+    echo "txs per block        : $(python3 -c "print(f'{$mined/($last_block-$first_block+1):.1f}')")"
+  fi
   echo "--> $report"
 }
 

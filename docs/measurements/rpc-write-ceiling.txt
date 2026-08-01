@@ -1,0 +1,7 @@
+loaded 60 pre-signed transactions
+firing all of them at concurrency 20
+
+submitted 29/60 accepted in 2.20s
+submission rate: 27.3 tx/s attempted, 13.2 tx/s accepted
+outcomes: {'http:429/-32005': 8, 'ok': 29, 'http:429/-32011': 17, 'rpc:-32003:txpool is full': 6}
+latency p50 392ms  p95 1011ms  max 1341ms

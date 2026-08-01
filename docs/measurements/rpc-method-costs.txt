@@ -1,0 +1,22 @@
+target: https://rpc.testnet.arc.network
+started: 2026-08-01 10:29:44Z
+
+=== METHOD COST COMPARISON (60 sequential calls, flat out) ===
+    method                ok         rate     latency  first failure
+    eth_blockNumber    60/60    2.6 req/s  p50   359ms  first_fail@None  -
+    (cooling down 20s)
+    eth_chainId        50/60    2.9 req/s  p50   327ms  first_fail@4     {'http:429/-32011': 10}
+    (cooling down 20s)
+    eth_getBalance     60/60    2.7 req/s  p50   355ms  first_fail@None  -
+    (cooling down 20s)
+    eth_call           50/60    3.2 req/s  p50   301ms  first_fail@6     {'http:429/-32011': 10}
+    (cooling down 20s)
+    eth_estimateGas    60/60    3.0 req/s  p50   317ms  first_fail@None  -
+    (cooling down 20s)
+
+=== VERDICT ===
+    eth_blockNumber   clean
+    eth_chainId       THROTTLED (10/60 rejected) {'http:429/-32011': 10}
+    eth_getBalance    clean
+    eth_call          THROTTLED (10/60 rejected) {'http:429/-32011': 10}
+    eth_estimateGas   clean

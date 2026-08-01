@@ -1,0 +1,12 @@
+loaded 45 pre-signed txs for 0x6BA70dfb557EC0C4B7805b9728201aCC81111111
+
+=== PACED WRITE RATE (nonce order, submitted vs actually mined) ===
+        2 tx/s  submitted 14/15  mined 14/15  (7.5s)  {'rpc:-32000:nonce too low: next nonce 85, tx nonce 84': 1}
+        5 tx/s  submitted 15/15  mined 15/15  (5.4s)  -
+       10 tx/s  submitted 15/15  mined 15/15  (4.4s)  -
+
+=== VERDICT ===
+    highest rate where submitted == mined == sent: 10 tx/s
+        2 tx/s  sent 15  submitted 14  mined 14  LOSS
+        5 tx/s  sent 15  submitted 15  mined 15  clean
+       10 tx/s  sent 15  submitted 15  mined 15  clean

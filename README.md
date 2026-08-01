@@ -31,7 +31,15 @@ Arc is the first chain where both are true by design.
 
 ## Status
 
-Early build. Checkpoint 2 milestone: project scoped, direction locked, toolchain being set up.
+Early build. Toolchain is up and the environment kill gate has been cleared: a
+contract compiles, deploys, executes and verifies its source on Arc Testnet,
+and the gas economics have been measured rather than assumed.
+
+- Probe contract: [`0x8850a83F…A3A9e5`](https://testnet.arcscan.app/address/0x8850a83Fc38b87453aeB4EEDb23c10f370A3A9e5) (source verified)
+- Measured cost of a state-changing call: **0.000654 USDC** (0.065¢)
+- Native USDC on Arc confirmed at 18 decimals by transaction, not by docs
+
+Full numbers and the two false trails along the way: [Day 1 report](docs/measurements/day1-report.md).
 
 Planned for final submission (9 Aug):
 - Bounty escrow contract with on-chain invariant verification, deployed on Arc Testnet

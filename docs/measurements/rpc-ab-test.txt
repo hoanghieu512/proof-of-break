@@ -1,0 +1,23 @@
+target: https://rpc.testnet.arc.network
+started: 2026-08-01 10:34:04Z
+
+=== A/B ALTERNATION, no cooldown, 40 calls per round ===
+    round method                 ok  elapsed  cumulative_s
+        0 eth_blockNumber    40/40    13.4s        13.4s
+        1 eth_call           31/40    14.8s        28.2s  <-- 9 rejected
+        2 eth_blockNumber    40/40    13.5s        41.7s
+        3 eth_call           31/40    13.5s        55.2s  <-- 9 rejected
+        4 eth_blockNumber    40/40    13.8s        69.0s
+        5 eth_call           31/40    13.3s        82.2s  <-- 9 rejected
+        6 eth_blockNumber    40/40    14.3s        96.6s
+        7 eth_call           35/40    11.8s       108.3s  <-- 5 rejected
+
+=== VERDICT ===
+    eth_blockNumber   160/160 ok (100%)
+    eth_call          128/160 ok (80%)
+
+    clean rounds : [0, 2, 4, 6]
+    throttled    : [1, 3, 5, 7]
+
+    throttled rounds by method: eth_blockNumber=0, eth_call=4
+    -> failures track the METHOD

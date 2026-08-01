@@ -1,0 +1,46 @@
+target: https://rpc.testnet.arc.network
+started: 2026-08-01 10:19:31Z
+
+=== 1. BURST CAPACITY (sequential, as fast as possible) ===
+    120/120 ok in 44.81s (2.7 req/s attempted, 2.7 req/s landed)
+    outcomes: {'ok': 120}
+    (cooling down 20s so the sustained-rate test is not polluted by the burst test)
+
+=== 2. SUSTAINABLE RATE (paced, 20s per step) ===
+      rate  sent    ok  fail    ok%   p50ms  errors
+    (cooling down 15s so each step starts from a comparable budget)
+       0.5    10    10     0   100%     317  -
+    (cooling down 15s so each step starts from a comparable budget)
+         1    20    20     0   100%     314  -
+    (cooling down 15s so each step starts from a comparable budget)
+         2    40    40     0   100%     324  -
+    (cooling down 15s so each step starts from a comparable budget)
+         3    60    60     0   100%     329  -
+    (cooling down 15s so each step starts from a comparable budget)
+         5   100   100     0   100%     369  -
+    (cooling down 15s so each step starts from a comparable budget)
+         8   160   160     0   100%     342  -
+    (cooling down 20s so recovery starts from a known state)
+
+=== 3. RECOVERY AFTER EXHAUSTION ===
+    drained with 80 rapid calls (0 rejected)
+    healed after 2.3s (1 probes at 2s spacing)
+    (cooling down 20s so endpoint comparison starts clean)
+
+=== 4. ENDPOINT COMPARISON (30 sequential calls each, cold) ===
+    endpoint           ok   req/s   p50ms  errors
+    arc.network      30/30     2.8     343  -
+    (cooling down 10s so the next endpoint is not judged on this one's backlog)
+    arc.io           30/30     2.3     359  -
+    (cooling down 10s so the next endpoint is not judged on this one's backlog)
+    blockdaemon      30/30     1.4     543  -
+    (cooling down 10s so the next endpoint is not judged on this one's backlog)
+    drpc             27/30     2.9     256  {'http:429/15': 3}
+    (cooling down 10s so the next endpoint is not judged on this one's backlog)
+    quicknode        30/30     0.9     670  -
+    (cooling down 10s so the next endpoint is not judged on this one's backlog)
+
+=== SUMMARY ===
+highest rate with >=99% success: 8 req/s
+burst before first rejection: None
+recovery: 2.3277818700298667
