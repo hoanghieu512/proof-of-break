@@ -1,0 +1,8 @@
+concurrency	requests	seconds	req_per_sec	ok	failed	first_error
+1	60	23.59	2.5	45	15	HTTP_429: {"jsonrpc":"2.0","id":1,"error":{"code":-32011,"message":"request limit reached"}}
+2	60	11.75	5.1	37	23	HTTP_429: {"jsonrpc":"2.0","id":1,"error":{"code":-32011,"message":"request limit reached"}}
+5	60	5.20	11.5	29	31	HTTP_429: {"jsonrpc":"2.0","id":1,"error":{"code":-32011,"message":"request limit reached"}}
+10	60	3.03	19.8	20	40	HTTP_429: {"jsonrpc":"2.0","id":1,"error":{"code":-32011,"message":"request limit reached"}}
+20	60	1.39	43.1	16	44	HTTP_429: {"jsonrpc":"2.0","id":1,"error":{"code":-32011,"message":"request limit reached"}}
+50	60	1.15	52.2	1	59	HTTP_429: {"jsonrpc":"2.0","id":1,"error":{"message":"rate limit exceeded","code":-32005}}
+100	60	0.98	61.1	5	55	HTTP_429: {"jsonrpc":"2.0","id":1,"error":{"code":-32005,"message":"rate limit exceeded"}}
