@@ -29,17 +29,67 @@ Fuzzing means thousands of attempts. That economic model only closes when two co
 
 Arc is the first chain where both are true by design.
 
-## Status
+## Live on Arc Testnet
 
-Early build. Toolchain is up and the environment kill gate has been cleared: a
-contract compiles, deploys, executes and verifies its source on Arc Testnet,
-and the gas economics have been measured rather than assumed.
+The contracts are deployed, source-verified, and holding real escrow. What is
+missing is the agent (Task 6–7) — nothing has claimed a bounty yet.
 
-- Probe contract: [`0x8850a83F…A3A9e5`](https://testnet.arcscan.app/address/0x8850a83Fc38b87453aeB4EEDb23c10f370A3A9e5) (source verified)
-- Measured cost of a state-changing call: **0.000654 USDC** (0.065¢)
-- Native USDC on Arc confirmed at 18 decimals by transaction, not by docs
+**Registry — the only address you need:**
 
-Full numbers and the two false trails along the way: [Day 1 report](docs/measurements/day1-report.md).
+[`0xbBd50574b55CE9F7453882E2d3361b393AD3F99C`](https://testnet.arcscan.app/address/0xbBd50574b55CE9F7453882E2d3361b393AD3F99C)
+
+Five bounties are open, **4.00 USDC** escrowed in total, each with its own
+target contract and a different reward:
+
+| # | Reward | Target | Callable function |
+|---|---|---|---|
+| 0 | 0.25 USDC | [`0xAa826060…Da853`](https://testnet.arcscan.app/address/0xAa826060033063142f6aD765D870b24Ec8EDa853) | `deposit(uint256)` |
+| 1 | 0.50 USDC | [`0xf4E0AB42…4836d`](https://testnet.arcscan.app/address/0xf4E0AB422EE370D3C2DdCD77e9Cc2CEAE7E4836d) | `deposit(uint256)` |
+| 2 | 0.75 USDC | [`0x7f0829dD…cc552`](https://testnet.arcscan.app/address/0x7f0829dD377A660e2f68B6f87AfEAAD9Eeccc552) | `deposit(uint256)` |
+| 3 | 1.00 USDC | [`0xed91a4dC…9E391`](https://testnet.arcscan.app/address/0xed91a4dC9Ad6C036246943487840026faCC9E391) | `deposit(uint256)` |
+| 4 | 1.50 USDC | [`0x41c0Ae1F…76a3C`](https://testnet.arcscan.app/address/0x41c0Ae1F750AC13d9e4e79B5Ab53b44F29076a3C) | `deposit(uint256)` |
+
+Every checker address, the full deployment record, and what it all cost:
+[docs/deployments/arc-testnet.md](docs/deployments/arc-testnet.md).
+
+### Read the board yourself
+
+No key needed, no permissions, nothing to install but Foundry:
+
+```bash
+cast call 0xbBd50574b55CE9F7453882E2d3361b393AD3F99C 'openBountyIds()(uint256[])' --rpc-url https://rpc.testnet.arc.network
+```
+
+```bash
+cast call 0xbBd50574b55CE9F7453882E2d3361b393AD3F99C 'getBounty(uint256)((address,address,address,bytes4,uint256,bool,string))' 0 --rpc-url https://rpc.testnet.arc.network
+```
+
+That second call returns everything an attacker needs — target, checker, the
+function it may call — which is exactly how the agent will find its work.
+
+### Run the test suite
+
+```bash
+forge test
+```
+
+```bash
+./scripts/verify-escrow.sh
+```
+
+The second one checks the claim that money can only leave the registry through a
+payout, against the compiled bytecode and then against the tests that pin the
+behavioural half.
+
+### Measured, not assumed
+
+- Native USDC on Arc is **18 decimals**, confirmed by transaction — `1 USDC = 1e18`
+- A state-changing call costs **0.000654 USDC** (0.065¢)
+- Deploying all 11 contracts and opening 5 bounties cost **0.13 USDC** in gas
+- `eth_call` on the public RPC throttles at ~2.2 req/s; other read methods do not
+- A transaction hash is **not** a promise of inclusion on Arc — confirm by receipt
+
+Full numbers and the false trails along the way: [Day 1 report](docs/measurements/day1-report.md).
 
 Planned for final submission (9 Aug):
 - Bounty escrow contract with on-chain invariant verification, deployed on Arc Testnet

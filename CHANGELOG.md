@@ -1,5 +1,37 @@
 # Changelog
 
+## v0.5.0 — 2026-08-01
+
+Live on Arc Testnet.
+
+### Deployed
+- `BountyRegistry` at `0xbBd50574b55CE9F7453882E2d3361b393AD3F99C`, plus five
+  `DemoVault` + `VaultChecker` pairs and five open bounties holding 4.00 USDC.
+- All 11 contracts source-verified on Arcscan (`is_verified: true`, confirmed
+  per address against the explorer API).
+- Cost: 16 transactions, 5,705,988 gas, **0.132950 USDC**. Deployer left with
+  14.788664 USDC; the agent wallet is untouched at 21.000000 USDC.
+- Full record: `docs/deployments/arc-testnet.md`.
+
+### Added
+- `script/Deploy.s.sol` — deploys the system and opens the board. Run with
+  `--slow` so each transaction is confirmed by receipt before the next is sent.
+- `script/OpenBounty.s.sol` — restock one fresh vault + bounty without
+  redeploying the Registry. Needed because every claim consumes a bounty and any
+  passer-by can kill one permanently by calling `deposit(1e18)` on its target.
+- `scripts/verify-deployment.sh` — reads the deployment back from mined state,
+  paced under the measured `eth_call` limit. Also reports how many bounties are
+  still claimable, which is the number to check before recording a demo.
+
+### Notes
+- Five bounties with different rewards rather than one: spares against griefing,
+  and something for the agent in Task 6 to actually choose between.
+- `forge script --verify` printed `Fail - Unable to verify` for several
+  contracts and `All (11) contracts were verified!` at the end. Blockscout
+  matches on bytecode, so verifying one `DemoVault` verifies its four
+  duplicates and the explicit resubmission then reports failure. Arcscan's API
+  is the authority; the forge summary is not.
+
 ## v0.4.0 — 2026-08-01
 
 The mechanism. Try, judge and pay, atomically.
