@@ -38,7 +38,7 @@ missing is the agent (Task 6–7) — nothing has claimed a bounty yet.
 
 [`0xbBd50574b55CE9F7453882E2d3361b393AD3F99C`](https://testnet.arcscan.app/address/0xbBd50574b55CE9F7453882E2d3361b393AD3F99C)
 
-Five bounties are open, **4.00 USDC** escrowed in total, each with its own
+Six bounties are open, **4.25 USDC** escrowed in total, each with its own
 target contract and a different reward:
 
 | # | Reward | Target | Callable function |
@@ -48,6 +48,7 @@ target contract and a different reward:
 | 2 | 0.75 USDC | [`0x7f0829dD…cc552`](https://testnet.arcscan.app/address/0x7f0829dD377A660e2f68B6f87AfEAAD9Eeccc552) | `deposit(uint256)` |
 | 3 | 1.00 USDC | [`0xed91a4dC…9E391`](https://testnet.arcscan.app/address/0xed91a4dC9Ad6C036246943487840026faCC9E391) | `deposit(uint256)` |
 | 4 | 1.50 USDC | [`0x41c0Ae1F…76a3C`](https://testnet.arcscan.app/address/0x41c0Ae1F750AC13d9e4e79B5Ab53b44F29076a3C) | `deposit(uint256)` |
+| 5 | 0.25 USDC | [`0x26b40427…AAcb8`](https://testnet.arcscan.app/address/0x26b404270325FB212631EBaa8128c48c206AAcb8) | `deposit(uint256)` |
 
 Every checker address, the full deployment record, and what it all cost:
 [docs/deployments/arc-testnet.md](docs/deployments/arc-testnet.md).

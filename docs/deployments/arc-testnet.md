@@ -20,7 +20,7 @@ the addresses below.
 
 ## Bounties
 
-Five, each with its own target. Rewards deliberately differ so that an agent
+Six, each with its own target. Rewards deliberately differ so that an agent
 choosing its own work has something to choose between.
 
 | # | Reward | Target (DemoVault) | Checker (VaultChecker) |
@@ -30,27 +30,33 @@ choosing its own work has something to choose between.
 | 2 | 0.75 USDC | [`0x7f0829dD…cc552`](https://testnet.arcscan.app/address/0x7f0829dD377A660e2f68B6f87AfEAAD9Eeccc552) | [`0xe72D8f60…4B53A`](https://testnet.arcscan.app/address/0xe72D8f60c4CDE26DD7A550bF9984b7FC6744B53A) |
 | 3 | 1.00 USDC | [`0xed91a4dC…9E391`](https://testnet.arcscan.app/address/0xed91a4dC9Ad6C036246943487840026faCC9E391) | [`0x316fD688…E8276`](https://testnet.arcscan.app/address/0x316fD68879f15A050eB5E9Ff7C7a85881D1E8276) |
 | 4 | 1.50 USDC | [`0x41c0Ae1F…76a3C`](https://testnet.arcscan.app/address/0x41c0Ae1F750AC13d9e4e79B5Ab53b44F29076a3C) | [`0x4c81A597…78921`](https://testnet.arcscan.app/address/0x4c81A597C76C676cfed89B7C2d30c44856b78921) |
+| 5 | 0.25 USDC | [`0x26b40427…AAcb8`](https://testnet.arcscan.app/address/0x26b404270325FB212631EBaa8128c48c206AAcb8) | [`0x44858607…7211B`](https://testnet.arcscan.app/address/0x44858607A5793672729c716107115e7042a7211B) |
 
-All five declare `deposit(uint256)` as the callable function and hold the same
+All six declare `deposit(uint256)` as the callable function and hold the same
 invariant: the sum of every holder's balance equals `totalIssued`.
 
-Total escrowed: **4.00 USDC** (`4000000000000000000` wei — Arc's native USDC has
+Total escrowed: **4.25 USDC** (`4250000000000000000` wei — Arc's native USDC has
 18 decimals).
+
+Bounty 5 was added later by `script/OpenBounty.s.sol`, which is what makes the
+restock path in the runbook a tested claim rather than an untested one. It cost
+0.272197 USDC in total: 0.25 escrowed plus 0.022197 in gas.
 
 ## Verification
 
-All 11 contracts report `is_verified: true` on Arcscan, confirmed by querying
-the explorer API per address.
+All 13 contracts report `is_verified: true` on Arcscan, confirmed by querying
+the explorer API per address. (11 from the initial deployment, plus the vault
+and checker added with bounty 5.)
 
 Worth recording because it is misleading: `forge script --verify` printed
 `Fail - Unable to verify` for several contracts and then `All (11) contracts
 were verified!` at the end. Both halves are explicable — Blockscout matches on
-bytecode, so verifying the first `DemoVault` verifies the other four
+bytecode, so verifying the first `DemoVault` verifies every later one
 automatically, and the explicit submission for a duplicate then reports failure
 even though the contract is verified. Forge reports each submission; Arcscan
 holds the truth. Do not trust the forge summary line either way; query the API.
 
-## Cost
+## Cost of the initial deployment
 
 | | |
 |---|---|
@@ -61,13 +67,13 @@ holds the truth. Do not trust the forge summary line either way; query the API.
 | Escrowed into bounties | 4.000000 USDC |
 | Total spend | **4.132950 USDC** |
 
-Balances after deployment:
+Balances as of the last check:
 
 | Wallet | Balance |
 |---|---|
-| Deployer `0x6BA70dfb…11111` | 14.788664 USDC |
-| Agent `0xd3e23bA1…88888` | 21.000000 USDC |
-| Registry (escrow) | 4.000000 USDC |
+| Deployer `0x6BA70dfb…11111` | 34.516467 USDC (topped up from the faucet, then 0.272 spent on bounty 5) |
+| Agent `0xd3e23bA1…88888` | 41.000000 USDC (topped up from the faucet; untouched by the system) |
+| Registry (escrow) | 4.250000 USDC |
 
 The agent wallet is untouched by design — it must fund its own attempts and
 receive its own reward in Task 7.

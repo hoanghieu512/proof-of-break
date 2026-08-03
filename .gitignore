@@ -18,6 +18,12 @@ dist/
 __pycache__/
 *.pyc
 
+# Internal working documents — kept on disk, never published.
+# The runbook holds operational detail and the explainer is an internal
+# briefing; neither is meant for the public repo.
+docs/RUNBOOK.md
+docs/EXPLAINER.md
+
 # OS / editor
 .DS_Store
 *.log
