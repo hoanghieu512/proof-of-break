@@ -27,3 +27,7 @@ docs/EXPLAINER.md
 # OS / editor
 .DS_Store
 *.log
+
+# Agent
+agent/node_modules/
+agent/dist/

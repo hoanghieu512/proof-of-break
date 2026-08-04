@@ -1,0 +1,19 @@
+{
+  "name": "proof-of-break-agent",
+  "version": "0.6.0",
+  "description": "Autonomous agent that scans the Proof of Break bounty board and picks its own work",
+  "scripts": {
+    "scan": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "type": "module",
+  "dependencies": {
+    "viem": "^2.55.10"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.2",
+    "tsx": "^4.23.5",
+    "typescript": "^7.0.2"
+  },
+  "private": true
+}

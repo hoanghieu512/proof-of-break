@@ -1,5 +1,48 @@
 # Changelog
 
+## v0.6.0 — 2026-08-04
+
+The agent finds its own work. It does not attack yet; that is Task 7.
+
+### Added
+- `agent/` — TypeScript + viem. `npm run scan` reads the bounty board from the
+  Registry on Arc Testnet, discards everything that cannot be won, picks the
+  most valuable of the rest, and prints why.
+- `scripts/test-agent-scenarios.sh` — builds a board on a local chain containing
+  every rejection reason plus an empty board, and checks the agent's conclusion
+  for each. 14 assertions.
+- `docs/measurements/task6-agent-scan.md` — what a scan costs and what the
+  throttling actually does.
+
+### The autonomy constraint
+The agent is told one thing: the Registry address. Targets, function signatures,
+rewards and how many bounties exist are all read at runtime. `grep` over
+`agent/src` finds exactly one address literal and no function names.
+
+Selection is feasibility first, money second. Sorting by reward and then finding
+the richest bounty unwinnable would waste the run. Rejections are reported
+distinctly — "invariant already broken" and "checker will not answer" both mean
+do not attack, but hiding which is which would hide whether the target was
+griefed or the referee is unreachable.
+
+### Measured
+A scan of six bounties costs 22 RPC calls (`3n + 4`) and 17–23 seconds at the
+configured pace.
+
+Three consecutive scans were throttled 1, then 2, then 4 times for identical
+work. Day 1 measured `eth_call` at ~2.2 req/s and the agent runs at 1.43 req/s,
+so a 35% margin is not enough: Arc's limit behaves like a budget draining over a
+window, and the Day 1 figure was an instantaneous ceiling measured on a full
+bucket. Errors reaching the agent stayed at 0 throughout — the retry absorbed
+every rejection. `RPC_MIN_INTERVAL_MS` was left at 700 ms rather than tuned
+upward on a guess, since the retry is what carries the load.
+
+### Fixed
+- `ARC_RPC_URL` from `.env` was resolved at module load, before `loadEnv()` ran
+  in `main()`, so the file's value was silently ignored. It worked only because
+  the fallback string was identical — an accident that would have held until the
+  agent was pointed at a different chain.
+
 ## v0.5.0 — 2026-08-01
 
 Live on Arc Testnet.
