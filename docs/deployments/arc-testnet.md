@@ -23,20 +23,39 @@ the addresses below.
 Six, each with its own target. Rewards deliberately differ so that an agent
 choosing its own work has something to choose between.
 
-| # | Reward | Target (DemoVault) | Checker (VaultChecker) |
-|---|---|---|---|
-| 0 | 0.25 USDC | [`0xAa826060…Da853`](https://testnet.arcscan.app/address/0xAa826060033063142f6aD765D870b24Ec8EDa853) | [`0xbE731dE9…B59c0`](https://testnet.arcscan.app/address/0xbE731dE980a0527127c07e0301ca1550aC9B59c0) |
-| 1 | 0.50 USDC | [`0xf4E0AB42…4836d`](https://testnet.arcscan.app/address/0xf4E0AB422EE370D3C2DdCD77e9Cc2CEAE7E4836d) | [`0x5BE2b7f6…93d83`](https://testnet.arcscan.app/address/0x5BE2b7f66bBd17b2fAb2535aEb2628373d593d83) |
-| 2 | 0.75 USDC | [`0x7f0829dD…cc552`](https://testnet.arcscan.app/address/0x7f0829dD377A660e2f68B6f87AfEAAD9Eeccc552) | [`0xe72D8f60…4B53A`](https://testnet.arcscan.app/address/0xe72D8f60c4CDE26DD7A550bF9984b7FC6744B53A) |
-| 3 | 1.00 USDC | [`0xed91a4dC…9E391`](https://testnet.arcscan.app/address/0xed91a4dC9Ad6C036246943487840026faCC9E391) | [`0x316fD688…E8276`](https://testnet.arcscan.app/address/0x316fD68879f15A050eB5E9Ff7C7a85881D1E8276) |
-| 4 | 1.50 USDC | [`0x41c0Ae1F…76a3C`](https://testnet.arcscan.app/address/0x41c0Ae1F750AC13d9e4e79B5Ab53b44F29076a3C) | [`0x4c81A597…78921`](https://testnet.arcscan.app/address/0x4c81A597C76C676cfed89B7C2d30c44856b78921) |
-| 5 | 0.25 USDC | [`0x26b40427…AAcb8`](https://testnet.arcscan.app/address/0x26b404270325FB212631EBaa8128c48c206AAcb8) | [`0x44858607…7211B`](https://testnet.arcscan.app/address/0x44858607A5793672729c716107115e7042a7211B) |
+| # | Reward | Status | Target (DemoVault) | Checker (VaultChecker) |
+|---|---|---|---|---|
+| 0 | 0.25 USDC | open | [`0xAa826060…Da853`](https://testnet.arcscan.app/address/0xAa826060033063142f6aD765D870b24Ec8EDa853) | [`0xbE731dE9…B59c0`](https://testnet.arcscan.app/address/0xbE731dE980a0527127c07e0301ca1550aC9B59c0) |
+| 1 | 0.50 USDC | open | [`0xf4E0AB42…4836d`](https://testnet.arcscan.app/address/0xf4E0AB422EE370D3C2DdCD77e9Cc2CEAE7E4836d) | [`0x5BE2b7f6…93d83`](https://testnet.arcscan.app/address/0x5BE2b7f66bBd17b2fAb2535aEb2628373d593d83) |
+| 2 | 0.75 USDC | open | [`0x7f0829dD…cc552`](https://testnet.arcscan.app/address/0x7f0829dD377A660e2f68B6f87AfEAAD9Eeccc552) | [`0xe72D8f60…4B53A`](https://testnet.arcscan.app/address/0xe72D8f60c4CDE26DD7A550bF9984b7FC6744B53A) |
+| 3 | 1.00 USDC | open | [`0xed91a4dC…9E391`](https://testnet.arcscan.app/address/0xed91a4dC9Ad6C036246943487840026faCC9E391) | [`0x316fD688…E8276`](https://testnet.arcscan.app/address/0x316fD68879f15A050eB5E9Ff7C7a85881D1E8276) |
+| 4 | 1.50 USDC | **claimed** | [`0x41c0Ae1F…76a3C`](https://testnet.arcscan.app/address/0x41c0Ae1F750AC13d9e4e79B5Ab53b44F29076a3C) | [`0x4c81A597…78921`](https://testnet.arcscan.app/address/0x4c81A597C76C676cfed89B7C2d30c44856b78921) |
+| 5 | 0.25 USDC | open | [`0x26b40427…AAcb8`](https://testnet.arcscan.app/address/0x26b404270325FB212631EBaa8128c48c206AAcb8) | [`0x44858607…7211B`](https://testnet.arcscan.app/address/0x44858607A5793672729c716107115e7042a7211B) |
 
 All six declare `deposit(uint256)` as the callable function and hold the same
 invariant: the sum of every holder's balance equals `totalIssued`.
 
 Total escrowed: **4.25 USDC** (`4250000000000000000` wei — Arc's native USDC has
-18 decimals).
+18 decimals). Five bounties remain open (**2.75 USDC**); bounty #4 was claimed by
+the agent — see below.
+
+## The agent's first claim
+
+On 2026-08-06 the agent (Task 7) broke bounty #4 with no human intervention: it
+scanned the board, chose #4 as the richest, fuzzed the target boundary-value-
+first, and broke the invariant on the 6th probe with a deposit of exactly `1e18`.
+
+| | |
+|---|---|
+| Winning tx | [`0xcd29a759…66126b`](https://testnet.arcscan.app/tx/0xcd29a7592a9fd5e31a37eba0b133961eecaee1e80bcee0fa8b3554c75c66126b) |
+| From → to | agent `0xd3e2…8888` → Registry, status success |
+| Reward | 1.5 USDC |
+| Agent balance | 41 → 42.490530 USDC (net +1.49 after gas) |
+| RPC cost | 67 calls, 46.5 s, **0 throttled, 0 real errors** |
+
+The winning value was reached by a generic boundary list with no knowledge of
+the target — `1e18` is on that list because "one whole unit at 18 decimals" is
+the most common amount in DeFi, not because the agent was told where the bug was.
 
 Bounty 5 was added later by `script/OpenBounty.s.sol`, which is what makes the
 restock path in the runbook a tested claim rather than an untested one. It cost

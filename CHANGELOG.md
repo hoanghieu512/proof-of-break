@@ -1,5 +1,57 @@
 # Changelog
 
+## v0.7.0 — 2026-08-06
+
+The agent runs end to end. It broke a bounty on Arc Testnet and got paid, with
+no human in the loop.
+
+### Added
+- `agent/src/boundaries.ts` — the annotated boundary value list. A generic list
+  for a uint256 amount, most-suspicious first, with a one-line reason for each
+  value. It contains no target-specific knowledge; 1e18 is on it because "one
+  whole unit at 18 decimals" is the most common amount in DeFi, not because the
+  agent knows the bug is there.
+- `agent/src/generator.ts` — candidate inputs, boundary-first or random-only.
+  Randomness is drawn off-chain from the OS CSPRNG, because Arc's PREVRANDAO is
+  always 0 — there is no on-chain randomness to draw.
+- `agent/src/attack.ts`, `loop.ts`, `run.ts` — fire attempts through the
+  Registry, decide success from mined state, stop on the first break.
+- `npm run attack` — the single end-to-end command.
+- `scripts/measure_sustained_rate.py`, `scripts/test-attack-scenarios.sh`,
+  `scripts/compare-strategies.sh`.
+
+### The public claim
+The agent broke bounty #4 (1.5 USDC) on the 6th probe, deposit(1e18), tx
+`0xcd29a7592a9fd5e31a37eba0b133961eecaee1e80bcee0fa8b3554c75c66126b`. Agent
+balance 41 → 42.49 USDC. The full run: scan → choose the richest → fuzz → claim,
+67 RPC calls, 0 throttled, 0 real errors.
+
+### Measured first (the task required it before the loop)
+A proper sustained-rate measurement replaced the Day 1 burst figure: eth_call
+held completely flat — zero throttling — over four minutes at each of 1.5, 1.0
+and 0.6 req/s, and again at 1.5 with retries on. So the sustainable rate is at
+least 1.5 req/s, and the retry-budget question is moot because nothing throttled.
+This contradicts Task 6's escalation (1→2→4), which is now attributed to a
+partly-drained budget from uncooled prior traffic. The throttling is real but
+transient; the retry stays as defence, not as a load-bearing crutch.
+docs/measurements/task7-sustained-rate.md.
+
+### The two-tier retry, which is the safety-critical part
+Reads retry rate-limits freely. Writes never blindly retry: on Arc a returned
+transaction hash does not mean the transaction mined (Day 1). So success is read
+from mined state — the bounty's paid flag and the agent's balance — never from
+the send response. A stuck send re-broadcasts the identical pre-signed bytes,
+same nonce, which cannot double-execute. This closes the trap where a first send
+breaks the bounty, its response is lost, and a naive retry hits the now-paid
+bounty, reverts, and is misread as failure. test-attack-scenarios.sh proves the
+paid-bounty attempt is filtered, not misread.
+
+### The control, reproducible offline
+STRATEGY=random-only vs boundary-first. compare-strategies.sh runs both on a
+local chain: boundary-first breaks a real vault on probe 6, and the same
+generator drawn 10,000 times hits the winning value 0 times — reproducing
+docs/measurements/task1-findability.md live, without spending on Arc.
+
 ## v0.6.0 — 2026-08-04
 
 The agent finds its own work. It does not attack yet; that is Task 7.

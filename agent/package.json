@@ -4,7 +4,9 @@
   "description": "Autonomous agent that scans the Proof of Break bounty board and picks its own work",
   "scripts": {
     "scan": "tsx src/index.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "attack": "tsx src/run.ts",
+    "compare": "tsx src/compare-random.ts"
   },
   "type": "module",
   "dependencies": {

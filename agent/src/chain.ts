@@ -11,7 +11,13 @@
  * and the same object counts them. Task 7 sends transactions through this too.
  */
 
-import { createPublicClient, custom, type PublicClient } from "viem";
+import {
+  createPublicClient,
+  createWalletClient,
+  custom,
+  type PublicClient,
+  type WalletClient,
+} from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import {
   arcTestnet,
@@ -28,6 +34,7 @@ export interface RpcStats {
   byMethod: Record<string, number>;
   throttled: number;
   errors: number;
+  errorsByMethod: Record<string, number>;
   startedAt: number;
 }
 
@@ -36,8 +43,32 @@ export const stats: RpcStats = {
   byMethod: {},
   throttled: 0,
   errors: 0,
+  errorsByMethod: {},
   startedAt: Date.now(),
 };
+
+/**
+ * A thrown result only counts as a "real error" for methods the agent depends
+ * on being answered. Everything else is either an expected answer or viem's own
+ * fallback probing, and counting it would make a clean run look alarming:
+ *
+ *   eth_estimateGas         reverts are the would-revert filter working — how
+ *                           the agent learns an input (deposit(0), an already-
+ *                           broken bounty) is a guaranteed miss, before any gas.
+ *   eth_fillTransaction     viem probes this while building a transaction; the
+ *                           node rejects it and viem falls back. The transaction
+ *                           still builds — every run here proves it.
+ *   eth_getTransactionReceipt   polled before a transaction has mined; a miss is
+ *                           "not yet", not a failure.
+ *
+ * An error on eth_sendRawTransaction or a plain read the agent made itself is
+ * real and is counted.
+ */
+const BENIGN_ERROR_METHODS = new Set([
+  "eth_estimateGas",
+  "eth_fillTransaction",
+  "eth_getTransactionReceipt",
+]);
 
 export function elapsedSeconds(): number {
   return (Date.now() - stats.startedAt) / 1000;
@@ -127,7 +158,9 @@ const countingTransport = custom({
     try {
       return await schedule(() => rpc(method, (params as unknown[]) ?? []));
     } catch (e) {
-      stats.errors++;
+      stats.errorsByMethod[method] = (stats.errorsByMethod[method] ?? 0) + 1;
+      // A reverting estimateGas is the revert-filter working, not a fault.
+      if (!BENIGN_ERROR_METHODS.has(method)) stats.errors++;
       throw e;
     }
   },
@@ -150,4 +183,23 @@ export function agentAccount() {
   const key = requireEnv("AGENT_PRIVATE_KEY");
   const normalised = (key.startsWith("0x") ? key : `0x${key}`) as `0x${string}`;
   return privateKeyToAccount(normalised);
+}
+
+/**
+ * A wallet client for the agent, on the same paced transport.
+ *
+ * Signing and sending go through the same single-file queue as reads, so the
+ * pacing that protects reads also protects the send. Note the queue's built-in
+ * retry re-POSTs the identical bytes, which is safe here: a resend of the same
+ * signed transaction is idempotent by nonce and cannot double-execute. The
+ * dangerous kind of retry — building a fresh transaction after a network error
+ * — is never done by the transport; that decision is left to attack.ts, which
+ * decides from mined state instead.
+ */
+export function agentWallet(): WalletClient {
+  return createWalletClient({
+    account: agentAccount(),
+    chain: arcTestnet,
+    transport: countingTransport,
+  });
 }

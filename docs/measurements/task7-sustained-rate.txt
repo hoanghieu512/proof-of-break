@@ -1,0 +1,45 @@
+target : https://rpc.testnet.arc.network
+method : eth_call (the one Arc throttles)
+started: 2026-08-06 01:14:44Z
+each rate runs 240s, bucketed per 30s, 120s between
+
+=== PHASE A — which rate stays flat, retries OFF ===
+
+  1.5 req/s:
+    issued 360  sent 360  ok 360  throttled 0
+    per-window throttled: 0 0 0 0 0 0 0 0
+    first third 0.0% rejected, last third 0.0%
+    verdict: flat
+  (cooling down 120s so the budget refills)
+
+  1.0 req/s:
+    issued 240  sent 240  ok 240  throttled 0
+    per-window throttled: 0 0 0 0 0 0 0 0
+    first third 0.0% rejected, last third 0.0%
+    verdict: flat
+  (cooling down 120s so the budget refills)
+
+  0.6 req/s:
+    issued 132  sent 132  ok 131  throttled 0
+    per-window throttled: 0 0 0 0 0 0 0 0
+    first third 0.0% rejected, last third 0.0%
+    verdict: flat
+    outcomes: {'exc:TimeoutError': 1}
+
+=== PHASE B — do retries come out of the same budget? ===
+  re-running 1.5 req/s with retries ON, same duration
+  (cooling down 120s first)
+    issued 360  sent 360  ok 360  throttled 0
+    per-window throttled: 0 0 0 0 0 0 0 0
+    first third 0.0% rejected, last third 0.0%
+    verdict: flat
+
+=== SUMMARY ===
+   1.5 req/s  throttled   0    0.0% →   0.0%  flat
+   1.0 req/s  throttled   0    0.0% →   0.0%  flat
+   0.6 req/s  throttled   0    0.0% →   0.0%  flat
+
+  highest flat rate: 1.5
+  retry overhead at 1.5 req/s: 0 extra requests
+  throttled without retry 0, with retry 0
+  -> no evidence retries are charged separately at this rate

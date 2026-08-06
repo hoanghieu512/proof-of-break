@@ -81,27 +81,29 @@ export const arcTestnet = defineChain({
 });
 
 /**
- * Minimum gap between JSON-RPC calls, in milliseconds.
+ * Minimum gap between JSON-RPC calls, in milliseconds. Applies to every call —
+ * reads and, in Task 7, the sends too.
  *
- * Measured on Day 1 (docs/measurements/day1-report.md): `eth_call` on Arc's
- * public RPC is throttled at roughly 2.2 requests per second, while
- * eth_blockNumber, eth_getBalance and eth_estimateGas are not. A cost-based
- * explanation was tested and disproved — the limit tracks the method.
+ * 700ms is 1.43 req/s. That number is now backed by a proper sustained-rate
+ * measurement, not the Day 1 burst figure (docs/measurements/task7-sustained-rate.md).
  *
- * 700ms is about 1.43 req/s, a deliberate ~35% margin under that ceiling. Every
- * read the agent makes is an eth_call, so this applies to all of them.
+ * WHAT WAS MEASURED. eth_call — the one method Arc throttles — was driven at a
+ * fixed pace for four minutes at each of 1.5, 1.0 and 0.6 req/s, with rejections
+ * bucketed per 30s to catch escalation. All three were completely flat: zero
+ * throttling, start to finish. A fourth run at 1.5 req/s with retries enabled
+ * was also flat, so the "do retries drain the same budget" question is moot at
+ * this rate — nothing throttles, so nothing is retried.
  *
- * The margin is not sufficient on its own, and that is a measured statement
- * rather than a caution. Three consecutive scans at this interval were
- * throttled 1, then 2, then 4 times — the same 22 calls each run, the rejections
- * climbing. So Arc's limit behaves like a budget that drains over a window, not
- * a fixed rate: the 2.2/s figure was measured on a full bucket, and repeated
- * runs do not get it.
+ * HOW THIS SITS WITH THE EARLIER READINGS. Day 1 saw eth_call reject at ~2.2/s,
+ * and Task 6 saw three back-to-back scans throttle 1→2→4 at this very interval.
+ * Neither reproduced under sustained measurement. The most likely reason is that
+ * both earlier readings started on a partially drained budget — Task 6's scans
+ * came straight after a burst of verify/scan traffic, with no cooldown. The
+ * throttling is real but transient; the sustainable rate is comfortably ≥1.5/s.
  *
- * The retry in chain.ts is therefore the real defence and not a fallback; it
- * absorbed every one of those rejections, and all three scans still returned
- * the correct answer with zero errors. Raising this number reduces how often
- * the retry is needed. It does not remove the need for it.
+ * So 1.43 req/s sits just under the measured flat ceiling of 1.5, with margin.
+ * The retry in chain.ts stays as defence against the transient throttling the
+ * earlier runs saw, but at this pace it is rarely triggered.
  */
 export const RPC_MIN_INTERVAL_MS = 700;
 
@@ -111,3 +113,27 @@ export const RPC_TIMEOUT_MS = 30_000;
 /** Retries for a call that fails with a rate-limit error. */
 export const RPC_RETRY_ATTEMPTS = 3;
 export const RPC_RETRY_BACKOFF_MS = 2_000;
+
+// -------------------------------------------------------------- attack ----
+
+/**
+ * Input generation strategy, chosen at the top level — never by the agent.
+ *
+ *   boundary-first  the QA strategy: try the boundary list, then random
+ *   random-only     the control: random from the start
+ *
+ * Two modes exist to reproduce, on camera, the head-to-head the project rests
+ * on. Set with STRATEGY=random-only in the environment.
+ */
+export const STRATEGY: "boundary-first" | "random-only" =
+  process.env.STRATEGY === "random-only" ? "random-only" : "boundary-first";
+
+/**
+ * Hard cap on attempts in a single run, so a run cannot go forever.
+ *
+ * Boundary-first reaches the demo bug on probe 6, so the cap only matters for
+ * random-only, and random-only against a live chain is not how the control is
+ * meant to be run (see scripts/compare-strategies.sh — it measures the control
+ * offline). 64 is comfortably past the 13-entry boundary list.
+ */
+export const ATTACK_MAX_ATTEMPTS = Number(process.env.ATTACK_MAX_ATTEMPTS ?? 64);
