@@ -1,0 +1,23 @@
+{
+  "name": "proof-of-break-web",
+  "version": "0.8.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "node scripts/check-boundaries.mjs && next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^16.3.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "server-only": "^0.0.1",
+    "viem": "^2.55.11"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "@types/react": "^19.2.18",
+    "typescript": "^7.0.2"
+  }
+}

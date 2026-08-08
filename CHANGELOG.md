@@ -1,5 +1,47 @@
 # Changelog
 
+## v0.8.0 — 2026-08-06
+
+A read-only web page: the Live Demo Link for CP3.
+
+### Added
+- `web/` — Next.js app showing three things: the bounty board read live from the
+  Registry, the break an agent already performed, and the boundary value list it
+  used. No wallet, no writes, no way to trigger the agent.
+- `scripts/sync-boundaries.mjs` — generates `web/src/data/boundaries.json` from
+  `agent/src/boundaries.ts`, keeping one source of truth. The build runs it in
+  `--check` mode so a drifted copy cannot ship.
+
+### The three constraints, and how each is enforced rather than intended
+- **No RPC from the browser.** `web/src/lib/chain.ts` opens with
+  `import "server-only"`, so a client component importing it fails the build.
+  Verified in a browser: instrumenting setInterval/setTimeout/fetch and leaving
+  the page idle for 20s gave zero of each, and the network tab shows no request
+  to the RPC.
+- **N viewers cost one read.** Measured through a counting proxy: a cold first
+  load costs 13 RPC calls, and five further loads cost 0. One refresh click
+  costs exactly 13 — one full board read, nothing more.
+- **Provenance is labelled.** Three badges — live from chain, from run log,
+  source code. Bounty status comes from the Registry; "broke on probe 6" is what
+  the agent printed and is marked as such, with the transaction hash for the
+  parts that can be checked.
+
+### Verified end to end
+Against a local chain: page shows `1 still claimable`, the agent claims it, the
+page still shows the old value (nothing polls), a refresh click flips it to
+`0 still claimable` and `claimed by an agent`. Against a dead RPC the page still
+returns 200 with the full run log and boundary list, plus an explicit error
+banner — never a blank screen.
+
+### Two bugs caught while building
+- The boundary generator silently parsed 4 of 13 entries; comments between
+  fields defeated the regex. It now strips comments, parses only inside the
+  array literal, and cross-checks the count against the `value:` keys, so an
+  undercount fails loudly instead of shipping a third of the list.
+- `revalidateTag` in Next 16 gives the caller the stale value. The refresh
+  button now uses `updateTag`, so the person who clicked sees the new data —
+  which is the entire point of the button.
+
 ## v0.7.0 — 2026-08-06
 
 The agent runs end to end. It broke a bounty on Arc Testnet and got paid, with

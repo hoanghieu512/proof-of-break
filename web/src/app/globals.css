@@ -1,0 +1,171 @@
+:root {
+  --cream-050: #fdf7e7;
+  --cream-100: #f7ecd2;
+  --cream-200: #f2e3bf;
+  --cream-400: #e3c994;
+  --rust-500: #c1552b;
+  --rust-700: #9c3f1d;
+  --moss-500: #5f7f42;
+  --moss-700: #46612f;
+  --gold-500: #d9a437;
+  --gold-700: #b4831f;
+  --clay-500: #c07e3d;
+  --bark-500: #6b7a4a;
+  --bark-700: #4a4e2c;
+  --bark-900: #33301c;
+  --muted: #8c9169;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--cream-100);
+  color: var(--bark-700);
+  font: 400 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+main { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
+
+h1 {
+  font-size: 30px;
+  line-height: 1.2;
+  margin: 0 0 6px;
+  color: var(--rust-500);
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 20px;
+  margin: 0 0 4px;
+  color: var(--rust-700);
+}
+
+h3 { font-size: 15px; margin: 0 0 4px; color: var(--bark-700); }
+
+p { margin: 0 0 12px; }
+
+a { color: var(--rust-700); }
+
+.tagline { font-size: 17px; color: var(--bark-500); margin-bottom: 20px; }
+
+.section { margin-top: 40px; }
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.card {
+  background: var(--cream-050);
+  border: 2px solid var(--cream-400);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+}
+
+.card.claimed { border-color: var(--moss-500); background: #eef2e3; }
+.card.dead { border-color: var(--clay-500); background: #f6ecdb; }
+
+/* Provenance badges. The whole point of the page is that a reader can tell
+   which numbers came from the chain and which came from a program's output. */
+.provenance {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  vertical-align: middle;
+}
+.provenance.chain { background: var(--moss-700); color: var(--cream-050); }
+.provenance.log { background: var(--gold-700); color: var(--cream-050); }
+.provenance.static { background: var(--bark-500); color: var(--cream-050); }
+
+.provenance-note {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 6px 0 16px;
+}
+
+.status {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.status.open { background: var(--cream-200); color: var(--bark-700); }
+.status.claimed { background: var(--moss-500); color: var(--cream-050); }
+.status.dead { background: var(--clay-500); color: var(--cream-050); }
+
+.bounty-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.reward { font-size: 19px; font-weight: 700; color: var(--rust-500); }
+.bid { font-weight: 700; color: var(--muted); }
+
+.kv { display: grid; grid-template-columns: 130px 1fr; gap: 2px 12px; font-size: 13px; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; }
+
+code, .mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12.5px;
+  word-break: break-all;
+}
+
+.refresh {
+  font: inherit;
+  font-size: 14px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 2px solid var(--rust-500);
+  background: var(--cream-050);
+  color: var(--rust-700);
+  cursor: pointer;
+}
+.refresh:hover:not(:disabled) { background: var(--cream-200); }
+.refresh:disabled { opacity: 0.6; cursor: default; }
+
+.error {
+  background: #f6dcd2;
+  border: 2px solid var(--rust-500);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+
+.summary-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: var(--bark-500);
+  margin-bottom: 14px;
+}
+.summary-row b { color: var(--bark-700); }
+
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--cream-400); vertical-align: top; }
+th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+tr.hit td { background: #eef2e3; }
+tr.hit .bv-label { font-weight: 700; color: var(--moss-700); }
+
+footer {
+  margin-top: 48px;
+  padding-top: 16px;
+  border-top: 1px solid var(--cream-400);
+  font-size: 13px;
+  color: var(--muted);
+}

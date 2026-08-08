@@ -31,3 +31,8 @@ docs/EXPLAINER.md
 # Agent
 agent/node_modules/
 agent/dist/
+
+# Web
+web/node_modules/
+web/.next/
+web/.vercel/
