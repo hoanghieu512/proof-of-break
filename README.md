@@ -40,6 +40,10 @@ boundary-value-first, and broke the invariant on its 6th probe.
 [`0xcd29a759…66126b`](https://testnet.arcscan.app/tx/0xcd29a7592a9fd5e31a37eba0b133961eecaee1e80bcee0fa8b3554c75c66126b)
 — 1.5 USDC paid to the agent's own wallet, verifiable on Arcscan.
 
+**Live board:** [proof-of-break.vercel.app](https://proof-of-break.vercel.app)
+— read-only. It shows the board as the chain has it right now, the break, and
+the boundary value list the agent used. No wallet, no writes.
+
 **Registry — the only address you need:**
 
 [`0xbBd50574b55CE9F7453882E2d3361b393AD3F99C`](https://testnet.arcscan.app/address/0xbBd50574b55CE9F7453882E2d3361b393AD3F99C)
@@ -93,16 +97,18 @@ behavioural half.
 - Native USDC on Arc is **18 decimals**, confirmed by transaction — `1 USDC = 1e18`
 - A state-changing call costs **0.000654 USDC** (0.065¢)
 - Deploying all 11 contracts and opening 5 bounties cost **0.13 USDC** in gas
-- `eth_call` on the public RPC throttles at ~2.2 req/s; other read methods do not
+- `eth_call` throttling is transient, not a fixed rate: it held completely flat over four minutes at 1.5, 1.0 and 0.6 req/s
 - A transaction hash is **not** a promise of inclusion on Arc — confirm by receipt
 
 Full numbers and the false trails along the way: [Day 1 report](docs/measurements/day1-report.md).
 
-Planned for final submission (9 Aug):
-- Bounty escrow contract with on-chain invariant verification, deployed on Arc Testnet
-- A deliberately vulnerable target contract
-- An autonomous agent that fuzzes the target, detects the violation, and claims the payout unattended
-- End-to-end demo video
+Done and verifiable today:
+- Bounty escrow with on-chain invariant verification, deployed and source-verified on Arc Testnet
+- A deliberately vulnerable target contract, with the bug documented in the source
+- An autonomous agent that scans the board, picks its own work, fuzzes the target and claims the payout unattended — [transaction](https://testnet.arcscan.app/tx/0xcd29a7592a9fd5e31a37eba0b133961eecaee1e80bcee0fa8b3554c75c66126b)
+- A read-only board at [proof-of-break.vercel.app](https://proof-of-break.vercel.app)
+
+Remaining for final submission (9 Aug): the end-to-end demo video.
 
 ## Honest scope
 
