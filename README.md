@@ -32,12 +32,14 @@ Arc is the first chain where both are true by design.
 ## Live on Arc Testnet — and an agent has claimed a bounty
 
 The contracts are deployed, source-verified, and holding real escrow, and an
-autonomous agent has broken one of the bounties end to end with no human in the
-loop: it scanned the board, chose the richest bounty, fuzzed the target
-boundary-value-first, and broke the invariant on its 6th probe.
+autonomous agent has broken bounties end to end with no human in the loop: it
+scanned the board, chose the richest bounty, fuzzed the target
+boundary-value-first, and broke the invariant on its 6th probe. It has now done
+this **four times, on four separate targets**, unattended each time.
 
-**The winning transaction:**
-[`0xcd29a759…66126b`](https://testnet.arcscan.app/tx/0xcd29a7592a9fd5e31a37eba0b133961eecaee1e80bcee0fa8b3554c75c66126b)
+**The winning transaction** — the run filmed for the demo video, so the hash on
+screen is the hash here:
+[`0x475dce0a…b0e89a`](https://testnet.arcscan.app/tx/0x475dce0a13ccc4800f5c889abbb0a4f7e9378c497932357536d36fe3c3b0e89a)
 — 1.5 USDC paid to the agent's own wallet, verifiable on Arcscan.
 
 **Live board:** [proof-of-break.vercel.app](https://proof-of-break.vercel.app)
@@ -48,8 +50,8 @@ the boundary value list the agent used. No wallet, no writes.
 
 [`0xbBd50574b55CE9F7453882E2d3361b393AD3F99C`](https://testnet.arcscan.app/address/0xbBd50574b55CE9F7453882E2d3361b393AD3F99C)
 
-Six bounties were opened; **five remain open** (2.75 USDC), and bounty #4 (1.5
-USDC) was the one the agent claimed:
+Nine bounties were opened; **five remain open** (2.75 USDC) and **four have been
+claimed by the agent** (6.0 USDC paid out):
 
 | # | Reward | Status | Target | Callable function |
 |---|---|---|---|---|
@@ -59,6 +61,13 @@ USDC) was the one the agent claimed:
 | 3 | 1.00 USDC | open | [`0xed91a4dC…9E391`](https://testnet.arcscan.app/address/0xed91a4dC9Ad6C036246943487840026faCC9E391) | `deposit(uint256)` |
 | 4 | 1.50 USDC | **claimed** | [`0x41c0Ae1F…76a3C`](https://testnet.arcscan.app/address/0x41c0Ae1F750AC13d9e4e79B5Ab53b44F29076a3C) | `deposit(uint256)` |
 | 5 | 0.25 USDC | open | [`0x26b40427…AAcb8`](https://testnet.arcscan.app/address/0x26b404270325FB212631EBaa8128c48c206AAcb8) | `deposit(uint256)` |
+| 6 | 1.50 USDC | **claimed** | [`0x9c746aBb…c88CB9`](https://testnet.arcscan.app/address/0x9c746aBb3788e1Cdc2499B104C3E5A9b8Ac88CB9) | `deposit(uint256)` |
+| 7 | 1.50 USDC | **claimed** | [`0xca18418E…388234`](https://testnet.arcscan.app/address/0xca18418E09D3bA3B184d5E01260912Db0c388234) | `deposit(uint256)` |
+| 8 | 1.50 USDC | **claimed** (on camera) | [`0xA0cf432E…7513AC`](https://testnet.arcscan.app/address/0xA0cf432Efc3d8156a85e3F92ff9a37E62d7513AC) | `deposit(uint256)` |
+
+Bounties 6, 7 and 8 were opened at the same reward on purpose, so that repeated
+takes of the demo video would all show the same number on screen and stay
+intercuttable. Each take spent one of them; #8 is the take that was kept.
 
 Every checker address, the full deployment record, and what it all cost:
 [docs/deployments/arc-testnet.md](docs/deployments/arc-testnet.md).
@@ -105,10 +114,8 @@ Full numbers and the false trails along the way: [Day 1 report](docs/measurement
 Done and verifiable today:
 - Bounty escrow with on-chain invariant verification, deployed and source-verified on Arc Testnet
 - A deliberately vulnerable target contract, with the bug documented in the source
-- An autonomous agent that scans the board, picks its own work, fuzzes the target and claims the payout unattended — [transaction](https://testnet.arcscan.app/tx/0xcd29a7592a9fd5e31a37eba0b133961eecaee1e80bcee0fa8b3554c75c66126b)
+- An autonomous agent that scans the board, picks its own work, fuzzes the target and claims the payout unattended — [transaction](https://testnet.arcscan.app/tx/0x475dce0a13ccc4800f5c889abbb0a4f7e9378c497932357536d36fe3c3b0e89a), repeated on four separate targets
 - A read-only board at [proof-of-break.vercel.app](https://proof-of-break.vercel.app)
-
-Remaining for final submission (9 Aug): the end-to-end demo video.
 
 ## Honest scope
 

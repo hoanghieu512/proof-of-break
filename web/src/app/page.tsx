@@ -175,11 +175,15 @@ export default async function Page() {
             <dd>
               {RUN_LOG.balanceBefore} → {RUN_LOG.balanceAfter} USDC ({RUN_LOG.netChange} after gas)
             </dd>
-            <dt>rpc cost</dt>
-            <dd>
-              {RUN_LOG.rpcCalls} calls, {RUN_LOG.elapsedSeconds}s,{" "}
-              {RUN_LOG.throttled} throttled, {RUN_LOG.realErrors} real errors
-            </dd>
+            {RUN_LOG.rpcCalls !== undefined && (
+              <>
+                <dt>rpc cost</dt>
+                <dd>
+                  {RUN_LOG.rpcCalls} calls, {RUN_LOG.elapsedSeconds}s,{" "}
+                  {RUN_LOG.throttled} throttled, {RUN_LOG.realErrors} real errors
+                </dd>
+              </>
+            )}
           </dl>
         </div>
 
