@@ -138,9 +138,21 @@ do: không ai cướp được, và nó chứng minh nhân quả.
 
 Đây là khối duy nhất tiêu tiền thật. Đọc hết trước khi bấm ghi.
 
-### Nhịp 0 — trước khi gõ (khoảng 10 giây)
+### Nhịp 0 — dọn màn hình TRƯỚC khi bấm ghi
 
-Màn hình: terminal trống, đã `cd` sẵn vào `agent/`.
+`package.json` nằm trong `agent/`, không phải gốc repo. Chạy `npm run attack` ở
+gốc là `ENOENT`. Gõ hai lệnh này **trước khi bấm ghi**, không phải trên hình:
+
+```bash
+cd /Users/lavopavden/Dev/projects/Proof-of-Break/agent
+```
+
+```bash
+clear
+```
+
+Giờ màn hình sạch và dòng duy nhất sắp hiện là lệnh thật. Bấm ghi, để im khoảng
+10 giây rồi mới nói.
 
 **Đọc (English) — 16 từ:**
 
