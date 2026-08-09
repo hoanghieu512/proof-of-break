@@ -23,6 +23,32 @@ probe không trúng**. Tua nhanh người xem thấy và chấp nhận; cắt r�
 
 ---
 
+## Ngân sách thời gian
+
+Thoại đã đo bằng cách đếm từ, quy đổi ở **150 từ/phút** — nhịp nói tiếng Anh
+bình thường, không vội.
+
+| Khối | Khung outline | Thoại đo được | |
+|---|---|---|---|
+| 1 · câu chuyện | 25s | 27s | thừa 2 |
+| 2 · cơ chế | 20s | 22s | thừa 2 |
+| 3 · demo | 90s | 65s | **dư 25s** |
+| 4 · giá trị biên | 25s | 30s | thừa 5 |
+| 5 · giới hạn | 20s | 26s | thừa 6 |
+| **tổng** | **180s** | **170s** | còn 10s |
+
+Đọc bảng này thế nào: bốn khối nói đè lên ảnh tĩnh đều hơi tràn, và **khối demo
+là chỗ bù**. 25 giây dư ở khối 3 không phải chỗ để nhét thêm lời — đó là khoảng
+lặng lúc gõ lệnh, lúc chờ agent chạy, và nhất là nhịp im khi khung
+`BOUNTY CLAIMED` hiện ra.
+
+Nếu lượt chạy thật dài hơn 90 giây thì không sao: khúc probe được tua nhanh lúc
+dựng.
+
+**Nói nhanh hơn 150 từ/phút để nhét vừa là sai hướng.** Thà cắt khối 2.
+
+---
+
 ## Trước khi bấm ghi
 
 ### Một lệnh quyết định go / no-go
@@ -67,17 +93,24 @@ thẳng GitHub).
 
 **Không gõ gì.** Chỉ nói đè lên ảnh tĩnh.
 
-> "Tôi dựng lại app CCTP mẫu của Circle cho Arc và tìm ra một lỗi thật — một
-> trường hợp code không xử lý. Tôi báo ngày 4 tháng 6. Circle sửa ngày 24 tháng
-> 6. Hai mươi ngày, cho một bản vá ba mươi dòng.
+**Ý cần truyền (tiếng Việt):** kể chuyện thật, không kể tầm nhìn. Hai mươi ngày
+đó không phải lỗi của ai, nó chỉ là thời gian chờ người rảnh. Chốt bằng câu hỏi.
+
+**Đọc (English) — 57 từ, ~23 giây:**
+
+> "I was rebuilding Circle's CCTP sample app for Arc, and I found a real bug.
 >
-> Không ai làm gì sai cả. Hai mươi ngày đó gần như chỉ để chờ một người có thời
-> gian đọc báo cáo và đồng ý.
+> I reported it on the 4th of June. Circle fixed it on the 24th. Twenty days,
+> for a thirty-line patch. Nobody did anything wrong. That was just waiting for
+> a human to have time.
 >
-> Nên câu hỏi là: nếu một lỗi diễn đạt được bằng một mệnh đề kiểm chứng được,
-> tại sao vẫn cần con người ở giữa?"
+> So: if a bug can be stated as a checkable proposition, why is a human still in
+> the middle?"
 
 Trỏ chuột vào dòng `closed as completed in #132` khi nói tới nó.
+
+*27 giây so với khung 25. Thừa 2 giây, bù được ở khối demo. Nếu vẫn cần cắt,
+bỏ câu "Nobody did anything wrong."*
 
 ---
 
@@ -85,13 +118,17 @@ Trỏ chuột vào dòng `closed as completed in #132` khi nói tới nó.
 
 **Hình:** slide 6 trong deck (sơ đồ 3 bước), hoặc mục 2 của trang Vercel.
 
-> "Agent không gọi thẳng vào target. Nó gửi hành động qua Registry, và Registry
-> làm ba việc trong **một giao dịch**: hỏi checker mệnh đề còn đúng không, thực
-> hiện hành động, rồi hỏi lại. Đang đúng mà thành sai thì trả USDC ngay.
+**Ý cần truyền (tiếng Việt):** ba bước trong một giao dịch. Nguyên tử vì hai lý
+do: không ai cướp được, và nó chứng minh nhân quả.
+
+**Đọc (English) — 51 từ, ~20 giây:**
+
+> "The agent never calls the target directly. It goes through the Registry, and
+> the Registry does three things in **one transaction**. Ask the checker.
+> Perform the move. Ask again. Held before, broken now, pay out.
 >
-> Vì sao phải nguyên tử: không có khe hở nào giữa lúc mệnh đề vỡ và lúc tiền
-> được trả, nên không ai chen vào cướp được. Và nó chứng minh nhân quả — trả cho
-> người **tìm ra**, không trả cho người **nhìn thấy**."
+> One transaction means no gap to steal the reward. And it pays whoever
+> **found** it, not whoever **noticed** it."
 
 *Khối này cắt trước tiên nếu thiếu giờ.*
 
@@ -105,7 +142,9 @@ Trỏ chuột vào dòng `closed as completed in #132` khi nói tới nó.
 
 Màn hình: terminal trống, đã `cd` sẵn vào `agent/`.
 
-> "Tôi gõ đúng một lệnh. Từ đây tôi không chạm vào bàn phím nữa."
+**Đọc (English) — 16 từ:**
+
+> "I type one command. From here on, I do not touch the keyboard again."
 
 ### Nhịp 1 — gõ lệnh
 
@@ -119,27 +158,35 @@ Gõ chậm cho người xem đọc kịp rồi mới Enter.
 
 Màn hình hiện `SCANNING THE BOARD`, các dòng `✓` và `✗`.
 
-> "Nó đang đọc sổ bounty từ chain. Agent được cho **đúng một thứ**: địa chỉ
-> Registry. Target là contract nào, hàm nào được phép gọi, thưởng bao nhiêu — nó
-> đọc hết lúc chạy, không ai nói trước.
+**Ý (tiếng Việt):** nhấn agent chỉ được cho một thứ. Rồi kể nó loại cái gì.
+
+**Đọc (English) — 44 từ, ~18 giây:**
+
+> "It is reading the board off the chain. This agent was told exactly **one
+> thing**: the Registry address. Which contracts, which function, what they pay
+> — all read at runtime.
 >
-> Nó loại những cái không đòi được: cái đã có người đòi, cái mà checker không
-> trả lời, cái mà mệnh đề đã hỏng sẵn."
+> And it discards what it cannot win. Already claimed. Rule already broken."
 
 Trỏ vào một dòng `✗` khi nói câu cuối.
 
 ### Nhịp 3 — chọn việc
 
-> "Chọn cái trả cao nhất trong số còn khả thi, và nó in luôn cái á quân — nên
-> thấy được nó thật sự có xếp hạng, không phải lấy bừa cái đầu tiên."
+**Đọc (English) — 21 từ, ~8 giây:**
+
+> "It takes the one that pays most. And it names the runner-up, so you can see
+> it actually ranked them."
 
 ### Nhịp 4 — bắn theo giá trị biên (khúc dài nhất, ~25 giây)
 
 Các dòng `probe 1`, `probe 2`… kèm dòng `why:`.
 
-> "Giờ nó sinh input. Không phải ngẫu nhiên — nó thử **danh sách giá trị biên**
-> trước, và mỗi giá trị đều kèm lý do vì sao một người test sẽ thử giá trị đó.
-> Số không. Số một. Một đơn vị ở 6 chữ số thập phân…"
+**Đọc (English) — 38 từ, ~15 giây:**
+
+> "Now it generates input. Not at random. It works a **boundary value list**
+> first, and every value carries the reason a tester would try it.
+>
+> Zero. One. One unit at six decimals. Values you try before knowing anything."
 
 Đọc lướt 2–3 dòng `why:` đầu, đừng đọc hết.
 
@@ -151,8 +198,12 @@ Màn hình hiện `BROKE THE INVARIANT` rồi khung `BOUNTY CLAIMED`.
 
 **Im lặng một nhịp cho khung hiện ra.** Đừng nói đè lên.
 
-> "Probe thứ sáu. Một đơn vị nguyên ở 18 chữ số thập phân. Mệnh đề vỡ, Registry
-> trả thưởng ngay trong cùng giao dịch đó, và tiền vào ví của chính agent."
+**Đọc (English) — 31 từ, ~12 giây. Nói chậm, đây là câu quan trọng nhất video.**
+
+> "Probe six. One whole unit at eighteen decimals.
+>
+> The rule broke. The Registry paid out in that same transaction. The USDC is in
+> the agent's own wallet."
 
 Trỏ vào hai dòng số dư trước/sau.
 
@@ -160,8 +211,10 @@ Trỏ vào hai dòng số dư trước/sau.
 
 Bôi đen tx hash → copy → chuyển tab Arcscan → dán → Enter.
 
-> "Đây là tx hash nó vừa in ra. Dán vào explorer công khai — giao dịch có thật,
-> trên chain, ai cũng kiểm được."
+**Đọc (English) — 22 từ, ~9 giây:**
+
+> "That is the hash it just printed. Paste it into the public explorer. Real
+> transaction, public chain. Anyone can check it."
 
 Chỉ vào `Success` và địa chỉ ví agent.
 
@@ -173,16 +226,19 @@ Chỉ vào `Success` và địa chỉ ví agent.
 
 **Hình:** trang Vercel, cuộn xuống mục 3 (danh sách giá trị biên).
 
-> "Câu hỏi ai cũng sẽ hỏi: tôi viết cả target lẫn agent, sao biết agent không
-> được mớm đáp án?
+**Ý (tiếng Việt):** nói thẳng câu hỏi ra trước khi giám khảo hỏi. Bằng chứng là
+vị trí thứ 6, không phải lời hứa.
+
+**Đọc (English) — 66 từ, ~26 giây:**
+
+> "The question everyone asks: I wrote the target **and** the agent, so how do
+> you know it was not told where the bug is?
 >
-> Đây là danh sách giá trị biên, lấy thẳng từ file agent thật sự đọc. Nó **không
-> chứa ngưỡng lỗi của target**. `1e18` có mặt vì đó là con số phổ biến nhất của
-> DeFi ở 18 chữ số thập phân — và chính vì thế nó nằm ở **vị trí thứ sáu, không
-> phải thứ nhất**.
+> This is the boundary list, straight from the file the agent reads. It holds
+> **no threshold from the target**. `1e18` is on it because that is the most
+> common amount in DeFi. Which is exactly why it sits at **six, not one**.
 >
-> Cùng agent đó, chuyển sang chế độ ngẫu nhiên thuần: **không trúng lần nào
-> trong mười nghìn lượt.**"
+> Same agent, pure random: **zero hits in ten thousand.**"
 
 Cuộn chậm qua bảng, dừng ở dòng `1e18` được tô sáng.
 
@@ -194,16 +250,18 @@ Cuộn chậm qua bảng, dừng ở dòng `1e18` được tô sáng.
 
 **Hình:** mục "Known limitations" trong README, hoặc slide 10.
 
-> "Nói trước giới hạn. Cái này **không thay thế audit**. Và nó **không bảo vệ
-> được TVL đang sống** — trên contract giữ tiền thật, khai thác luôn đáng giá
-> hơn nhận thưởng, không cơ chế nào đổi được điều đó.
+**Ý (tiếng Việt):** nói giới hạn trước khi bị hỏi. Kết bằng câu định vị.
+
+**Đọc (English) — 63 từ, ~25 giây:**
+
+> "The limits, before anyone asks. This does **not replace an audit**, and it
+> does **not protect live TVL**. On a contract holding real money, exploiting
+> beats reporting, and nothing here changes that.
 >
-> Thứ làm cơ chế này chạy được **không phải testnet, mà là tài sản bằng không**.
-> Trên mainnet nó chạy qua shadow deployment: bản ứng viên lên chain, không nạp
-> tài sản nào, bounty trả USDC thật. Bên trong không có gì để lấy, nên nhận
-> thưởng là lựa chọn duy nhất có lý.
+> What makes it work is **not testnet. It is zero assets at risk.** On mainnet
+> the same mechanism runs as a shadow deployment, paying real USDC.
 >
-> Định vị của nó: QA liên tục cho đường ống phát hành."
+> The positioning: continuous QA for the release pipeline."
 
 ---
 
