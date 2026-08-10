@@ -1,0 +1,91 @@
+1
+00:00:00,000 --> 00:00:03,360
+I'm Hieu. I build alone, and my background
+
+2
+00:00:03,360 --> 00:00:05,360
+is not Solidity. It's QA.
+
+3
+00:00:05,360 --> 00:00:08,880
+Eight years testing other people's software,
+
+4
+00:00:08,880 --> 00:00:12,000
+finding the case nobody thought to try.
+
+5
+00:00:20,000 --> 00:00:21,802
+In June I found a real bug
+
+6
+00:00:21,802 --> 00:00:23,743
+in Circle's CCTP sample app.
+
+7
+00:00:23,743 --> 00:00:26,307
+I reported it. Circle shipped the fix
+
+8
+00:00:26,307 --> 00:00:27,554
+twenty days later.
+
+9
+00:00:27,554 --> 00:00:29,356
+Nobody did anything wrong.
+
+10
+00:00:29,356 --> 00:00:31,713
+That was just waiting for a human.
+
+11
+00:00:31,713 --> 00:00:34,000
+Proof of Break removes that wait.
+
+12
+00:00:36,000 --> 00:00:38,170
+Nine bounties live on Arc Testnet.
+
+13
+00:00:38,170 --> 00:00:39,255
+Eighty-two tests.
+
+14
+00:00:39,255 --> 00:00:41,170
+An agent that scans the board,
+
+15
+00:00:41,170 --> 00:00:43,660
+picks its own job, and has claimed four
+
+16
+00:00:43,660 --> 00:00:45,830
+of them on four different targets,
+
+17
+00:00:45,830 --> 00:00:48,000
+with nobody touching the keyboard.
+
+18
+00:00:48,000 --> 00:00:50,218
+What I want from the Accelerator
+
+19
+00:00:50,218 --> 00:00:53,198
+is the one thing I cannot test my way into:
+
+20
+00:00:53,198 --> 00:00:55,832
+a real protocol putting a real release
+
+21
+00:00:55,832 --> 00:00:57,426
+candidate on the board.
+
+22
+00:00:57,426 --> 00:00:59,990
+The mechanism works. It needs someone
+
+23
+00:00:59,990 --> 00:01:02,000
+other than me to point it at.

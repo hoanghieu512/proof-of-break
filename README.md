@@ -105,7 +105,8 @@ behavioural half.
 
 - Native USDC on Arc is **18 decimals**, confirmed by transaction — `1 USDC = 1e18`
 - A state-changing call costs **0.000654 USDC** (0.065¢)
-- Deploying all 11 contracts and opening 5 bounties cost **0.13 USDC** in gas
+- Deploying the first 11 contracts and opening the first 5 bounties cost **0.13
+  USDC** in gas (the board has grown to 19 contracts and 9 bounties since)
 - `eth_call` throttling is transient, not a fixed rate: it held completely flat over four minutes at 1.5, 1.0 and 0.6 req/s
 - A transaction hash is **not** a promise of inclusion on Arc — confirm by receipt
 
